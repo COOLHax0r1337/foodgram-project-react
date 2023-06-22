@@ -78,12 +78,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./infra/
-          push: true
-          tags: coolhaxor/foodgram_gateway:latest 
 
   deploy:
     runs-on: ubuntu-latest
@@ -117,8 +111,8 @@ jobs:
           sudo docker compose -f docker-compose.prod.yml up -d
           sudo docker compose -f docker-compose.prod.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.prod.yml exec backend python manage.py collectstatic
-          sudo docker compose -f docker-compose.prod.yml exec backend cp -r /app/collected_static/. /static/static/
-          sudo docker compose -f docker-compose.prod.yml exec backend python manage.py load_data_csv
+          sudo docker compose -f docker-compose.prod.yml exec backend cp -r /code/collected_static/. /code/static/static/
+          sudo docker compose -f docker-compose.prod.yml exec backend python manage.py ingredients
 
 
   send_message:
