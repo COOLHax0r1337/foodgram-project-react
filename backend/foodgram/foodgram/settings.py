@@ -10,7 +10,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(', ')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '158.160.67.219', 'backend', 'sladkiygladiator.bounceme.net']
 
 AUTH_USER_MODEL = 'users.User'
 
