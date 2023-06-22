@@ -13,10 +13,10 @@ services:
     volumes:
       - pgfg-data:/var/lib/postgresql/data/
     env_file:
-      - ./.env
+      - .env
 
   backend:
-    build: ../backend
+    image: coolhaxor/foodgram_backend:latest
     volumes:
       - fg-data:/code/data/
       - fg-static:/code/static/
@@ -24,10 +24,10 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env
+      - .env
 
   frontend:
-    build: ../frontend
+    image: coolhaxor/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
@@ -36,7 +36,7 @@ services:
   nginx:
     image: nginx:1.19.3
     ports:
-      - 80:80
+      - 8000:80
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
