@@ -31,8 +31,8 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @admin.display(description='Tags')
     def get_tags(self, obj):
-        list_ = [_.name for _ in obj.tags.all()]
-        return ', '.join(list_)
+        tag_list = [tag.name for tag in obj.tags.all()]
+        return ', '.join(tag_list)
 
     @admin.display(description=' Ingredients ')
     def get_ingredients(self, obj):
