@@ -31,6 +31,14 @@ from .serializers import (IngredientSerializer, RecipeReadSerializer,
 
 User = get_user_model()
 FILENAME = 'shoppingcart.pdf'
+FONT_SIZE_TEXT = 14
+FONT_SIZE_TITLE = 24
+X_POS_VALUE = 50
+Y_POS_VALUE = 800
+START_VALUE = 1
+Y_POS_REC_VALUE = 15
+SEEK_START = 0
+INDENT_VALUE = 20
 
 
 class GetObjectMixin:
@@ -212,38 +220,38 @@ class RecipesViewSet(viewsets.ModelViewSet):
         buffer = io.BytesIO()
         page = canvas.Canvas(buffer)
         pdfmetrics.registerFont(TTFont('Vera', 'Vera.ttf'))
-        x_position, y_position = 50, 800
+        x_position, y_position = X_POS_VALUE, Y_POS_VALUE
         shopping_cart = (
             request.user.shopping_cart.recipe.
             values(
                 'ingredients__name',
                 'ingredients__measurement_unit'
             ).annotate(amount=Sum('recipe__amount')).order_by())
-        page.setFont('Vera', 14)
+        page.setFont('Vera', FONT_SIZE_TEXT)
         if shopping_cart:
-            indent = 20
+            indent = INDENT_VALUE
             page.drawString(x_position, y_position, 'Shopping cart:')
-            for index, recipe in enumerate(shopping_cart, start=1):
+            for index, recipe in enumerate(shopping_cart, start=START_VALUE):
                 page.drawString(
                     x_position, y_position - indent,
                     f'{index}. {recipe["ingredients__name"]} - '
                     f'{recipe["amount"]} '
                     f'{recipe["ingredients__measurement_unit"]}.')
-                y_position -= 15
-                if y_position <= 50:
+                y_position -= Y_POS_REC_VALUE
+                if y_position <= X_POS_VALUE:
                     page.showPage()
-                    y_position = 800
+                    y_position = Y_POS_VALUE
             page.save()
-            buffer.seek(0)
+            buffer.seek(SEEK_START)
             return FileResponse(
                 buffer, as_attachment=True, filename=FILENAME)
-        page.setFont('Vera', 24)
+        page.setFont('Vera', FONT_SIZE_TITLE)
         page.drawString(
             x_position,
             y_position,
             'Shoplist is empty!')
         page.save()
-        buffer.seek(0)
+        buffer.seek(SEEK_START)
         return FileResponse(buffer, as_attachment=True, filename=FILENAME)
 
 
